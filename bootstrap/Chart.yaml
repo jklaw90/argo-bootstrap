@@ -1,0 +1,6 @@
+apiVersion: v2
+name: argocd-bootstrap
+description: A Helm chart for bootstraping argocd
+
+type: application
+version: 1.0.0

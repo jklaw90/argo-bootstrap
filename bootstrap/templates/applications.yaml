@@ -1,0 +1,33 @@
+{{- range $index, $project := .Values.projects -}}
+{{- range $appName, $data := $project.applications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ printf "%s-%s" $project.cluster $appName }}
+  namespace: argocd
+spec:
+  project: {{ $project.name }}
+  destination:
+    name: {{ $project.cluster}}
+    namespace: {{ $data.namespace }}
+  source:
+    path: {{ $data.path }}
+    repoURL: {{ squote $data.repo }}
+    targetRevision: {{ $data.targetRevision | default "HEAD" }}
+    {{- if $data.helm }}
+    helm:
+      releaseName: {{ $data.helm.releaseName }}
+      {{- if $data.helm.valueFiles }}
+      valueFiles:
+        {{- range $data.helm.valueFiles }}
+          - {{ . | squote }}
+        {{- end }}
+      {{- end }}
+      {{- if $data.helm.overrides }}
+      values: |
+        {{- .helm.overrides | toYaml | nindent 8 }}
+      {{- end }}
+    {{- end }}
+---
+{{- end }}
+{{- end -}}

@@ -1,0 +1,30 @@
+projects:
+  - name: "some-cluster-1"
+    cluster: cluster-1
+    applications:
+
+      cert-manager:
+        namespace: cert-manager
+        path: charts/cert-manager/v1.3.1
+        repo: git@github.com:jklaw90/argo-bootstrap.git
+        autoSync: true
+        helm:
+          releaseName: aws-ebs-csi-driver
+
+      prometheus:
+        namespace: monitoring
+        path: charts/prometheus/15.3.1
+        repo: git@github.com:jklaw90/argo-bootstrap.git
+        autoSync: true
+        helm:
+          releaseName: prometheus
+
+      elastic-stack:
+        namespace: monitoring
+        path: charts/elastic-stack/1.0.0
+        repo: git@github.com:jklaw90/argo-bootstrap.git
+        autoSync: true
+        helm:
+          releaseName: elastic-stack
+          valueFiles:
+            - fake-cluster-values.yaml
